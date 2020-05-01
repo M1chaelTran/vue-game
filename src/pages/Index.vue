@@ -4,8 +4,11 @@
       <div class="flex flex-1 flex-col items-center">
         <character
           :key="player.id"
-          v-for="player in players"
+          v-for="(player, index) in players"
           :character="player"
+          :index="index"
+          :gameStarted="gameStarted"
+          @removePlayer="removePlayer"
         />
         <q-btn
           class="mt-8"
@@ -159,39 +162,7 @@ export default {
       // }, 5000);
     },
     difficulty: function(val) {
-      // easy or normal difficulty
-      let numberOfMonsters = this.players.length;
-
-      if (val === GAME_DIFFICULTY.hard)
-        numberOfMonsters = this.players.length + 1;
-      else if (val === GAME_DIFFICULTY.hardcore)
-        numberOfMonsters = this.players.length + 2;
-
-      const enemies = reduce(
-        Array(numberOfMonsters).fill(),
-        acc => {
-          const id = uid();
-          acc[id] = {
-            ...getDefaultCharacter(),
-            id,
-            name: faker.random.word(),
-            team: TEAM_TYPES.enemy
-          };
-          return acc;
-        },
-        {}
-      );
-
-      if (val === GAME_DIFFICULTY.easy) {
-        // half the enemy max attack strength
-        forEach(enemies, x => {
-          x.attack.max = Math.floor(x.attack.max / 2);
-        });
-      }
-      this.characters = {
-        ...this.players,
-        ...enemies
-      };
+      this.setDifficulty(val);
     }
   },
   methods: {
@@ -312,10 +283,47 @@ export default {
           team: TEAM_TYPES.player
         }
       };
+      this.setDifficulty(this.difficulty);
     },
-    // setGameDifficulty(difficulty) {
-    //   this.difficulty = difficulty;
-    // },
+    removePlayer(playerId) {
+      this.characters = filter(this.characters, x => x.id !== playerId);
+      this.setDifficulty(this.difficulty);
+    },
+    setDifficulty(difficulty) {
+      // easy or normal difficulty
+      let numberOfMonsters = this.players.length;
+
+      if (difficulty === GAME_DIFFICULTY.hard)
+        numberOfMonsters = this.players.length + 1;
+      else if (difficulty === GAME_DIFFICULTY.hardcore)
+        numberOfMonsters = this.players.length + 2;
+
+      const enemies = reduce(
+        Array(numberOfMonsters).fill(),
+        acc => {
+          const id = uid();
+          acc[id] = {
+            ...getDefaultCharacter(),
+            id,
+            name: faker.random.word(),
+            team: TEAM_TYPES.enemy
+          };
+          return acc;
+        },
+        {}
+      );
+
+      if (difficulty === GAME_DIFFICULTY.easy) {
+        // half the enemy max attack strength
+        forEach(enemies, x => {
+          x.attack.max = Math.floor(x.attack.max / 2);
+        });
+      }
+      this.characters = {
+        ...this.players,
+        ...enemies
+      };
+    },
     giveUp() {
       this.gameStarted = false;
       this.gameOutcome = "lost";

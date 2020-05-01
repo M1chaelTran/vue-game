@@ -5,15 +5,15 @@
         <img :src="gameOutcome && require(`assets/${gameOutcome}.png`)" />
       </q-card-section>
 
-      <q-card-actions align="right">
+      <q-card-actions align="center">
         <q-btn
           label="Close"
-          outline
+          flat
           @click="$emit('closeGameOutcome')"
           v-close-popup
         />
         <q-btn
-          label="Another round?"
+          label="Another round"
           color="primary"
           v-close-popup
           @click="$emit('startGame')"
