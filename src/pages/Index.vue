@@ -1,14 +1,21 @@
 <template>
   <div class="p-4 md:p-8">
-    <div class="row justify-between">
-      <div class="col q-mr-lg">
+    <div class="flex mb-8 space-x-8">
+      <div class="flex flex-1 flex-col items-center">
         <character
           :key="player.id"
           v-for="player in players"
           :character="player"
         />
+        <q-btn
+          class="mt-8"
+          v-if="!maxPlayer && !gameStarted"
+          outline
+          @click="addPlayer"
+          >Add allies</q-btn
+        >
       </div>
-      <div class="col">
+      <div class="flex flex-1">
         <character
           :key="monster.id"
           v-for="monster in monsters"
@@ -24,6 +31,8 @@
         @specialAttack="attack(true)"
         @heal="heal"
         @giveUp="giveUp"
+        :difficulty="difficulty"
+        @setDifficulty="difficulty = $event"
       />
     </div>
 
@@ -32,7 +41,6 @@
         bordered
         separator
         class="q-mb-md"
-        style="width: 400px;"
         :key="i"
         v-for="(round, i) in rounds.slice().reverse()"
       >
@@ -49,21 +57,24 @@
       :showGameOutcome="showGameOutcome"
       :gameOutcome="gameOutcome"
       @startGame="startGame"
+      @closeGameOutcome="closeGameOutcome"
     />
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import { isEmpty, filter, map, chain, orderBy, forEach } from "lodash";
+import { isEmpty, filter, map, chain, orderBy, forEach, reduce } from "lodash";
+import { uid } from "quasar";
+import faker from "faker";
 
-const defaultCharacter = {
+const getDefaultCharacter = () => ({
   health: 100,
   attack: {
     min: 0,
     max: 10
   }
-};
+});
 
 const SPECIAL_ATTACK_MULTIPLIER = 2;
 export const ATTACK_TYPES = {
@@ -74,6 +85,12 @@ export const ATTACK_TYPES = {
 export const TEAM_TYPES = {
   player: "player",
   enemy: "enemy"
+};
+export const GAME_DIFFICULTY = {
+  easy: "easy",
+  normal: "normal",
+  hard: "hard",
+  hardcore: "hardcore"
 };
 
 export default {
@@ -137,6 +154,9 @@ export default {
           multiplier = 0.5;
       }
       return multiplier;
+    },
+    maxPlayer() {
+      return this.players.length === 3;
     }
   },
   watch: {
@@ -147,6 +167,41 @@ export default {
       // setTimeout(() => {
       //   vm.showGameOutcome = false;
       // }, 5000);
+    },
+    difficulty: function(val) {
+      // easy or normal difficulty
+      let numberOfMonsters = this.players.length;
+
+      if (val === GAME_DIFFICULTY.hard)
+        numberOfMonsters = this.players.length + 1;
+      else if (val === GAME_DIFFICULTY.hardcore)
+        numberOfMonsters = this.players.length + 2;
+
+      const enemies = reduce(
+        Array(numberOfMonsters).fill(),
+        acc => {
+          const id = uid();
+          acc[id] = {
+            ...getDefaultCharacter(),
+            id,
+            name: faker.random.word(),
+            team: TEAM_TYPES.enemy
+          };
+          return acc;
+        },
+        {}
+      );
+
+      if (val === GAME_DIFFICULTY.easy) {
+        // half the enemy max attack strength
+        const enemy = enemies[Object.keys(enemies)[0]];
+        enemy.attack.max = Math.floor(enemy.attack.max / 2);
+      }
+
+      this.characters = {
+        ...this.players,
+        ...enemies
+      };
     }
   },
   methods: {
@@ -256,9 +311,27 @@ export default {
 
       this.checkGameState();
     },
+    addPlayer() {
+      const id = uid();
+      this.characters = {
+        ...this.characters,
+        [id]: {
+          ...getDefaultCharacter(),
+          id,
+          name: faker.name.findName(),
+          team: TEAM_TYPES.player
+        }
+      };
+    },
+    // setGameDifficulty(difficulty) {
+    //   this.difficulty = difficulty;
+    // },
     giveUp() {
       this.gameStarted = false;
       this.gameOutcome = "lost";
+    },
+    closeGameOutcome() {
+      this.showGameOutcome = false;
     }
   },
   components: {

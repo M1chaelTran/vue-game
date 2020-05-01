@@ -6,7 +6,12 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn label="Close" outline v-close-popup />
+        <q-btn
+          label="Close"
+          outline
+          @click="$emit('closeGameOutcome')"
+          v-close-popup
+        />
         <q-btn
           label="Another round?"
           color="primary"
