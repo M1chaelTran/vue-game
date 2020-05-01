@@ -108,16 +108,6 @@ export default {
           },
           team: TEAM_TYPES.player
         },
-        // id2: {
-        //   id: "id2",
-        //   name: "friend",
-        //   health: 0,
-        //   attack: {
-        //     min: 0,
-        //     max: 10
-        //   },
-        //   team: TEAM_TYPES.player
-        // },
         id3: {
           id: "id3",
           name: "monster",
@@ -194,10 +184,10 @@ export default {
 
       if (val === GAME_DIFFICULTY.easy) {
         // half the enemy max attack strength
-        const enemy = enemies[Object.keys(enemies)[0]];
-        enemy.attack.max = Math.floor(enemy.attack.max / 2);
+        forEach(enemies, x => {
+          x.attack.max = Math.floor(x.attack.max / 2);
+        });
       }
-
       this.characters = {
         ...this.players,
         ...enemies
