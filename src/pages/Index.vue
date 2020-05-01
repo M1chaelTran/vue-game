@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <div class="p-4 md:p-8">
     <div class="row justify-between">
       <div class="col q-mr-lg">
         <character
@@ -50,7 +50,7 @@
       :gameOutcome="gameOutcome"
       @startGame="startGame"
     />
-  </q-page>
+  </div>
 </template>
 
 <script>
