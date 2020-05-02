@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { isEmpty, filter, map, chain,  forEach, reduce } from "lodash";
+import { isEmpty, filter, map, chain, forEach, reduce } from "lodash";
 import { uid } from "quasar";
 import faker from "faker";
 
