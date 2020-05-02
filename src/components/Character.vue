@@ -1,6 +1,6 @@
 <template>
   <div class="w-full mb-8">
-    <h4 class="text-center text-3xl">
+    <h4 class="whitespace-no-wrap text-center text-3xl">
       <span :class="{ 'text-strike': isDead }">{{ character.name }}</span>
       {{ isDead ? "☠️" : character.team === "enemy" ? "🤖" : "" }}
       <q-btn

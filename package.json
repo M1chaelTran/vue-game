@@ -8,6 +8,7 @@
   "author": "Michael Tran <michaeltran.online@gmail.com>",
   "private": true,
   "scripts": {
+    "start": "quasar d",
     "build": "quasar build",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ./",
     "test": "echo \"No test specified\" && exit 0"

@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 md:p-8">
-    <div class="flex mb-8 space-x-8">
+    <div class="flex mb-4 md:mb-8 space-x-4 md:space-x-8">
       <div class="flex flex-1 flex-col items-center">
         <character
           :key="player.id"
@@ -10,15 +10,11 @@
           :gameStarted="gameStarted"
           @removePlayer="removePlayer"
         />
-        <q-btn
-          class="mt-8"
-          v-if="!maxPlayer && !gameStarted"
-          outline
-          @click="addPlayer"
+        <q-btn v-if="!maxPlayer && !gameStarted" outline @click="addPlayer"
           >Add allies</q-btn
         >
       </div>
-      <div class="flex flex-1">
+      <div class="flex flex-1 flex-col items-center">
         <character
           :key="monster.id"
           v-for="monster in monsters"
@@ -66,8 +62,7 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { isEmpty, filter, map, chain, orderBy, forEach, reduce } from "lodash";
+import { isEmpty, filter, map, chain,  forEach, reduce } from "lodash";
 import { uid } from "quasar";
 import faker from "faker";
 
@@ -92,8 +87,8 @@ export const TEAM_TYPES = {
 export const GAME_DIFFICULTY = {
   easy: "easy",
   normal: "normal",
-  hard: "hard",
-  hardcore: "hardcore"
+  hard: "hard"
+  // hardcore: "hardcore"
 };
 
 export default {
@@ -143,8 +138,8 @@ export default {
       switch (this.difficulty) {
         case "easy":
           multiplier = 2;
-        case "hardcore":
-          multiplier = 0.5;
+        // case "hardcore":
+        //   multiplier = 0.5;
       }
       return multiplier;
     },
@@ -316,7 +311,7 @@ export default {
       if (difficulty === GAME_DIFFICULTY.easy) {
         // half the enemy max attack strength
         forEach(enemies, x => {
-          x.attack.max = Math.floor(x.attack.max / 2);
+          x.health = Math.floor(x.health / 1.2);
         });
       }
       this.characters = {
