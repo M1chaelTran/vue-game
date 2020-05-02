@@ -192,7 +192,7 @@ export default {
 
         const randomAttackStrength = getRandomStrength(x.attack, specialAttack);
         const randomEnemy = chain(this.characters)
-          .filter(y => y.team !== x.team)
+          .filter(y => y.team !== x.team && y.health > 0)
           .shuffle()
           .head()
           .value();
@@ -234,7 +234,7 @@ export default {
 
       // player heals
       // 1. for each player alive
-      // 2. check to see which player has less health
+      // 2. check to see which player has lowest health
       // 3. heal that player
       let alivePlayersWithLowestHealth = chain(this.characters)
         .filter(x => x.team === TEAM_TYPES.player && x.health > 0)
