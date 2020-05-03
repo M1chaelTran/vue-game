@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { TEAM_TYPES, ATTACK_TYPES } from "pages/Index";
+import { TEAM_TYPES, ATTACK_TYPES } from "pages/constant";
 export default {
   name: "Event",
   props: ["event"],
@@ -40,7 +40,9 @@ export default {
           break;
         case ATTACK_TYPES.special:
           icon = "🌟";
+          break;
         default:
+          console.error("Unhandled action type", this.event.actionType);
           break;
       }
       return icon;

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { GAME_DIFFICULTY } from "pages/Index";
+import { GAME_DIFFICULTY } from "pages/constant";
 
 export default {
   name: "Controls",

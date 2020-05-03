@@ -62,9 +62,15 @@
 </template>
 
 <script>
-import { isEmpty, filter, map, chain, forEach, reduce } from "lodash";
+import { chain, filter, forEach, isEmpty, map, reduce } from "lodash";
 import { uid } from "quasar";
 import faker from "faker";
+import {
+  ATTACK_TYPES,
+  GAME_DIFFICULTY,
+  SPECIAL_ATTACK_MULTIPLIER,
+  TEAM_TYPES
+} from "pages/constant";
 
 const getDefaultCharacter = () => ({
   health: 100,
@@ -73,23 +79,6 @@ const getDefaultCharacter = () => ({
     max: 10
   }
 });
-
-const SPECIAL_ATTACK_MULTIPLIER = 2;
-export const ATTACK_TYPES = {
-  attack: "attack",
-  heal: "heal",
-  special: "special"
-};
-export const TEAM_TYPES = {
-  player: "player",
-  enemy: "enemy"
-};
-export const GAME_DIFFICULTY = {
-  easy: "easy",
-  normal: "normal",
-  hard: "hard"
-  // hardcore: "hardcore"
-};
 
 export default {
   name: "PageIndex",
@@ -132,16 +121,6 @@ export default {
     },
     monsters() {
       return filter(this.characters, x => x.team === TEAM_TYPES.enemy);
-    },
-    attackMultiplier() {
-      let multiplier = 1;
-      switch (this.difficulty) {
-        case "easy":
-          multiplier = 2;
-        // case "hardcore":
-        //   multiplier = 0.5;
-      }
-      return multiplier;
     },
     maxPlayer() {
       return this.players.length === 3;
