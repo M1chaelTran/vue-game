@@ -42,7 +42,8 @@ export default {
           icon = "🌟";
           break;
         default:
-          console.error("Unhandled action type", this.event.actionType);
+          // defaults to action.type === ATTACK_TYPES.attack
+          // console.error("Unhandled action type", this.event.actionType);
           break;
       }
       return icon;
