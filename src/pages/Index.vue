@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { chain, filter, forEach, isEmpty, map, reduce } from "lodash";
+import { chain, filter, forEach, isEmpty, reduce } from "lodash";
 import { uid } from "quasar";
 import faker from "faker";
 import {
@@ -143,7 +143,7 @@ export default {
     startGame() {
       this.gameStarted = true;
       // reset all characters health
-      this.characters = map(this.characters, x => ({ ...x, health: 100 }));
+      this.resetCharacterHealth();
       this.rounds = [];
       this.gameOutcome = null;
       this.showGameOutcome = false;
@@ -304,6 +304,16 @@ export default {
     },
     closeGameOutcome() {
       this.showGameOutcome = false;
+    },
+    resetCharacterHealth() {
+      forEach(this.characters, x => {
+        if (
+          this.difficulty === GAME_DIFFICULTY.easy &&
+          x.team === TEAM_TYPES.enemy
+        )
+          x.health = Math.floor(100 / 1.2);
+        else x.health = 100;
+      });
     }
   },
   components: {
